@@ -47,13 +47,14 @@ class CommandsPlugin
           carry.inventory.give pile
           tags ?= '' # hide no tags for display
           @console.log "Gave #{name} x #{count} #{tags}"
-        # TODO: integrate with voxel-inventroy-hotbar, move to current slot?
+        # TODO: integrate with voxel-inventory-hotbar, move to current slot?
 
       block: (name, data) ->
-        index = @registry.getBlockIndex name
-        if not index?
-          @console.log "No such block: #{name}"
-          return
+        if name?
+          index = @registry.getBlockIndex name
+          if not index?
+            @console.log "No such block: #{name}"
+            return
 
         reachDistance = 8
         hit = @game.raycastVoxels @game.cameraPosition(), @game.cameraVector(), reachDistance # TODO: refactor w/ voxel-highlight, voxel-reach?
@@ -62,10 +63,10 @@ class CommandsPlugin
           return
         [x, y, z] = hit.voxel
 
-        oldIndex = @game.getBlock oldIndex
+        oldIndex = hit.value
         oldName = @registry.getBlockName oldIndex
 
-        @game.setBlock hit, index
+        @game.setBlock hit.voxel, index if name?
 
         blockdata = @game.plugins?.get 'voxel-blockdata'
         if blockdata?
@@ -74,9 +75,12 @@ class CommandsPlugin
             blockdata.set x, y, z, data
 
         dataInfo = ""
-        dataInfo = "#{oldData} -> " if oldData?
+        dataInfo = "#{JSON.stringify oldData} -> " if oldData?
         data ?= oldData
-        dataInfo += data if oldData?
+        dataInfo += JSON.stringify(data) if oldData?
+
+        name ?= oldName
+        index ?= oldIndex
 
         @console.log "Set (#{x}, #{y}, #{z}) #{oldName}/#{oldIndex} -> #{name}/#{index}  #{dataInfo}"
 

@@ -76,10 +76,12 @@
         },
         block: function(name, data) {
           var blockdata, dataInfo, hit, index, oldData, oldIndex, oldName, reachDistance, x, y, z, _ref2, _ref3;
-          index = this.registry.getBlockIndex(name);
-          if (index == null) {
-            this.console.log("No such block: " + name);
-            return;
+          if (name != null) {
+            index = this.registry.getBlockIndex(name);
+            if (index == null) {
+              this.console.log("No such block: " + name);
+              return;
+            }
           }
           reachDistance = 8;
           hit = this.game.raycastVoxels(this.game.cameraPosition(), this.game.cameraVector(), reachDistance);
@@ -88,9 +90,11 @@
             return;
           }
           _ref2 = hit.voxel, x = _ref2[0], y = _ref2[1], z = _ref2[2];
-          oldIndex = this.game.getBlock(oldIndex);
+          oldIndex = hit.value;
           oldName = this.registry.getBlockName(oldIndex);
-          this.game.setBlock(hit, index);
+          if (name != null) {
+            this.game.setBlock(hit.voxel, index);
+          }
           blockdata = (_ref3 = this.game.plugins) != null ? _ref3.get('voxel-blockdata') : void 0;
           if (blockdata != null) {
             oldData = blockdata.get(x, y, z);
@@ -100,13 +104,19 @@
           }
           dataInfo = "";
           if (oldData != null) {
-            dataInfo = "" + oldData + " -> ";
+            dataInfo = "" + (JSON.stringify(oldData)) + " -> ";
           }
           if (data == null) {
             data = oldData;
           }
           if (oldData != null) {
-            dataInfo += data;
+            dataInfo += JSON.stringify(data);
+          }
+          if (name == null) {
+            name = oldName;
+          }
+          if (index == null) {
+            index = oldIndex;
           }
           return this.console.log("Set (" + x + ", " + y + ", " + z + ") " + oldName + "/" + oldIndex + " -> " + name + "/" + index + "  " + dataInfo);
         }
