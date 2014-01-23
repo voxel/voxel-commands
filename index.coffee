@@ -23,11 +23,24 @@ class CommandsPlugin
         @console.log ".item name [count [tags]]"
         @console.log ".block name [data]"
         @console.log ".plugins"
+        @console.log ".enable plugin"
+        @console.log ".disable plugin"
 
       plugins: () ->
-        if @game.plugins?
-          list = @game.plugins.list() # TODO: listAll?
-          @console.log "Enabled plugins (#{list.count}): " + list.join ' '
+        list = @game.plugins?.list() # TODO: listAll? show disabled in red
+        @console.log "Enabled plugins (#{list.length}): " + list.join ' '
+
+      enable: (name) ->
+        if @game.plugins?.enable name
+          @console.log "Enabled plugin: #{name}"
+        else
+          @console.log "Failed to enable plugin: #{name}"
+
+      disable: (name) ->
+        if @game.plugins.disable name
+          @console.log "Disabled plugin: #{name}"
+        else
+          @console.log "Failed to disable plugin: #{name}"
 
       pos: (x, y, z) ->
         player = @game.plugins?.get 'voxel-player'

@@ -38,13 +38,28 @@
           this.console.log(".pos x y z");
           this.console.log(".item name [count [tags]]");
           this.console.log(".block name [data]");
-          return this.console.log(".plugins");
+          this.console.log(".plugins");
+          this.console.log(".enable plugin");
+          return this.console.log(".disable plugin");
         },
         plugins: function() {
-          var list;
-          if (this.game.plugins != null) {
-            list = this.game.plugins.list();
-            return this.console.log(("Enabled plugins (" + list.count + "): ") + list.join(' '));
+          var list, _ref2;
+          list = (_ref2 = this.game.plugins) != null ? _ref2.list() : void 0;
+          return this.console.log(("Enabled plugins (" + list.length + "): ") + list.join(' '));
+        },
+        enable: function(name) {
+          var _ref2;
+          if ((_ref2 = this.game.plugins) != null ? _ref2.enable(name) : void 0) {
+            return this.console.log("Enabled plugin: " + name);
+          } else {
+            return this.console.log("Failed to enable plugin: " + name);
+          }
+        },
+        disable: function(name) {
+          if (this.game.plugins.disable(name)) {
+            return this.console.log("Disabled plugin: " + name);
+          } else {
+            return this.console.log("Failed to disable plugin: " + name);
           }
         },
         pos: function(x, y, z) {
