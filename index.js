@@ -17,11 +17,15 @@
 
   CommandsPlugin = (function() {
     function CommandsPlugin(game, opts) {
-      var _ref;
+      var _ref, _ref1;
       this.game = game;
       this.console = (_ref = this.game.plugins) != null ? _ref.get('voxel-console') : void 0;
       if (this.console == null) {
         throw 'voxel-commands requires voxel-console';
+      }
+      this.registry = (_ref1 = this.game.plugins) != null ? _ref1.get('voxel-registry') : void 0;
+      if (this.registry == null) {
+        throw 'voxel-commands requires voxel-registry';
       }
       this.handlers = {
         undefined: function() {
@@ -36,15 +40,20 @@
           return this.console.log(".block name [data]");
         },
         pos: function(x, y, z) {
-          var player, _ref1;
-          player = (_ref1 = this.game.plugins) != null ? _ref1.get('voxel-player') : void 0;
+          var player, _ref2;
+          player = (_ref2 = this.game.plugins) != null ? _ref2.get('voxel-player') : void 0;
           if (player) {
             player.moveTo(x, y, z);
             return this.console.log([player.position.x, player.position.y, player.position.z]);
           }
         },
         item: function(name, count, tags) {
-          var carry, pile, _ref1;
+          var carry, pile, props, _ref2;
+          props = this.registry.getItemProps(name);
+          if (props == null) {
+            this.console.log("No such item: " + name);
+            return;
+          }
           if (count == null) {
             count = 1;
           }
@@ -52,7 +61,7 @@
             tags = void 0;
           }
           pile = new ItemPile(name, count, tags);
-          carry = (_ref1 = this.game.plugins) != null ? _ref1.get('voxel-carry') : void 0;
+          carry = (_ref2 = this.game.plugins) != null ? _ref2.get('voxel-carry') : void 0;
           if (carry) {
             carry.inventory.give(pile);
             if (tags == null) {
@@ -62,43 +71,40 @@
           }
         },
         block: function(name, data) {
-          var blockdata, dataInfo, hit, index, oldData, oldIndex, oldName, reachDistance, registry, x, y, z, _ref1, _ref2, _ref3;
-          registry = (_ref1 = this.game.plugins) != null ? _ref1.get('voxel-registry') : void 0;
-          if (registry) {
-            index = registry.getBlockIndex(name);
-            if (index == null) {
-              this.console.log("No such block name: " + name);
-              return;
-            }
-            reachDistance = 8;
-            hit = this.game.raycastVoxels(this.game.cameraPosition(), this.game.cameraVector(), reachDistance);
-            if (!hit) {
-              this.console.log("No block targetted");
-              return;
-            }
-            _ref2 = hit.voxel, x = _ref2[0], y = _ref2[1], z = _ref2[2];
-            oldIndex = this.game.getBlock(oldIndex);
-            oldName = registry.getBlockName(oldIndex);
-            this.game.setBlock(hit, index);
-            blockdata = (_ref3 = this.game.plugins) != null ? _ref3.get('voxel-blockdata') : void 0;
-            if (blockdata != null) {
-              oldData = blockdata.get(x, y, z);
-              if (data != null) {
-                blockdata.set(x, y, z, data);
-              }
-            }
-            dataInfo = "";
-            if (oldData != null) {
-              dataInfo = "" + oldData + " -> ";
-            }
-            if (data == null) {
-              data = oldData;
-            }
-            if (oldData != null) {
-              dataInfo += data;
-            }
-            return this.console.log("Set (" + x + ", " + y + ", " + z + ") " + oldName + "/" + oldIndex + " -> " + name + "/" + index + "  " + dataInfo);
+          var blockdata, dataInfo, hit, index, oldData, oldIndex, oldName, reachDistance, x, y, z, _ref2, _ref3;
+          index = this.registry.getBlockIndex(name);
+          if (index == null) {
+            this.console.log("No such block: " + name);
+            return;
           }
+          reachDistance = 8;
+          hit = this.game.raycastVoxels(this.game.cameraPosition(), this.game.cameraVector(), reachDistance);
+          if (!hit) {
+            this.console.log("No block targetted");
+            return;
+          }
+          _ref2 = hit.voxel, x = _ref2[0], y = _ref2[1], z = _ref2[2];
+          oldIndex = this.game.getBlock(oldIndex);
+          oldName = this.registry.getBlockName(oldIndex);
+          this.game.setBlock(hit, index);
+          blockdata = (_ref3 = this.game.plugins) != null ? _ref3.get('voxel-blockdata') : void 0;
+          if (blockdata != null) {
+            oldData = blockdata.get(x, y, z);
+            if (data != null) {
+              blockdata.set(x, y, z, data);
+            }
+          }
+          dataInfo = "";
+          if (oldData != null) {
+            dataInfo = "" + oldData + " -> ";
+          }
+          if (data == null) {
+            data = oldData;
+          }
+          if (oldData != null) {
+            dataInfo += data;
+          }
+          return this.console.log("Set (" + x + ", " + y + ", " + z + ") " + oldName + "/" + oldIndex + " -> " + name + "/" + index + "  " + dataInfo);
         }
       };
       this.handlers.p = this.handlers.position = this.handlers.pos;
@@ -122,7 +128,7 @@
         handler = this.handlers.undefined;
         args.unshift(command);
       }
-      return handler.call(this, args);
+      return handler.apply(this, args);
     };
 
     CommandsPlugin.prototype.enable = function() {

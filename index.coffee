@@ -10,6 +10,8 @@ class CommandsPlugin
   constructor: (@game, opts) ->
     @console = @game.plugins?.get 'voxel-console'
     throw 'voxel-commands requires voxel-console' if not @console?
+    @registry = @game.plugins?.get 'voxel-registry'
+    throw 'voxel-commands requires voxel-registry' if not @registry?
 
     @handlers =
       undefined: (command, args...) ->
@@ -28,6 +30,12 @@ class CommandsPlugin
           @console.log [player.position.x, player.position.y, player.position.z]
 
       item: (name, count, tags) ->
+
+        props = @registry.getItemProps name
+        if not props?
+          @console.log "No such item: #{name}"
+          return
+
         count ?= 1
         tags ?= undefined
         pile = new ItemPile(name, count, tags)
@@ -39,37 +47,35 @@ class CommandsPlugin
         # TODO: integrate with voxel-inventroy-hotbar, move to current slot?
 
       block: (name, data) ->
-        registry = @game.plugins?.get 'voxel-registry'
-        if registry
-          index = registry.getBlockIndex name
-          if not index?
-            @console.log "No such block name: #{name}"
-            return
+        index = @registry.getBlockIndex name
+        if not index?
+          @console.log "No such block: #{name}"
+          return
 
-          reachDistance = 8
-          hit = @game.raycastVoxels @game.cameraPosition(), @game.cameraVector(), reachDistance # TODO: refactor w/ voxel-highlight, voxel-reach?
-          if not hit
-            @console.log "No block targetted"
-            return
-          [x, y, z] = hit.voxel
+        reachDistance = 8
+        hit = @game.raycastVoxels @game.cameraPosition(), @game.cameraVector(), reachDistance # TODO: refactor w/ voxel-highlight, voxel-reach?
+        if not hit
+          @console.log "No block targetted"
+          return
+        [x, y, z] = hit.voxel
 
-          oldIndex = @game.getBlock oldIndex
-          oldName = registry.getBlockName oldIndex
+        oldIndex = @game.getBlock oldIndex
+        oldName = @registry.getBlockName oldIndex
 
-          @game.setBlock hit, index
+        @game.setBlock hit, index
 
-          blockdata = @game.plugins?.get 'voxel-blockdata'
-          if blockdata?
-            oldData = blockdata.get x, y, z
-            if data?
-              blockdata.set x, y, z, data
+        blockdata = @game.plugins?.get 'voxel-blockdata'
+        if blockdata?
+          oldData = blockdata.get x, y, z
+          if data?
+            blockdata.set x, y, z, data
 
-          dataInfo = ""
-          dataInfo = "#{oldData} -> " if oldData?
-          data ?= oldData
-          dataInfo += data if oldData?
+        dataInfo = ""
+        dataInfo = "#{oldData} -> " if oldData?
+        data ?= oldData
+        dataInfo += data if oldData?
 
-          @console.log "Set (#{x}, #{y}, #{z}) #{oldName}/#{oldIndex} -> #{name}/#{index}  #{dataInfo}"
+        @console.log "Set (#{x}, #{y}, #{z}) #{oldName}/#{oldIndex} -> #{name}/#{index}  #{dataInfo}"
 
     # aliases
     @handlers.p = @handlers.position = @handlers.pos
@@ -96,7 +102,7 @@ class CommandsPlugin
       handler = @handlers.undefined
       args.unshift command
 
-    handler.call(this, args)
+    handler.apply(this, args)
 
 
   enable: () ->
