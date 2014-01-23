@@ -47,6 +47,10 @@
             return this.console.log([player.position.x, player.position.y, player.position.z]);
           }
         },
+        home: function() {
+          var _ref2, _ref3;
+          return (_ref2 = this.game.plugins) != null ? (_ref3 = _ref2.get('voxel-player')) != null ? _ref3.home() : void 0 : void 0;
+        },
         item: function(name, count, tags) {
           var carry, pile, props, _ref2;
           props = this.registry.getItemProps(name);

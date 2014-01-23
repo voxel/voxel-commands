@@ -29,6 +29,9 @@ class CommandsPlugin
           player.moveTo x, y, z
           @console.log [player.position.x, player.position.y, player.position.z]
 
+      home: () ->
+        @game.plugins?.get('voxel-player')?.home()
+
       item: (name, count, tags) ->
 
         props = @registry.getItemProps name
