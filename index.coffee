@@ -22,6 +22,12 @@ class CommandsPlugin
         @console.log ".pos x y z"
         @console.log ".item name [count [tags]]"
         @console.log ".block name [data]"
+        @console.log ".plugins"
+
+      plugins: () ->
+        if @game.plugins?
+          list = @game.plugins.list() # TODO: listAll?
+          @console.log "Enabled plugins (#{list.count}): " + list.join ' '
 
       pos: (x, y, z) ->
         player = @game.plugins?.get 'voxel-player'

@@ -37,7 +37,15 @@
           this.console.log("Available commands:");
           this.console.log(".pos x y z");
           this.console.log(".item name [count [tags]]");
-          return this.console.log(".block name [data]");
+          this.console.log(".block name [data]");
+          return this.console.log(".plugins");
+        },
+        plugins: function() {
+          var list;
+          if (this.game.plugins != null) {
+            list = this.game.plugins.list();
+            return this.console.log(("Enabled plugins (" + list.count + "): ") + list.join(' '));
+          }
         },
         pos: function(x, y, z) {
           var player, _ref2;
