@@ -10,8 +10,10 @@
     "voxel"
   ],
   "dependencies": {
+    "shellwords": "~0.1.0",
+    "inventory": "~0.1.0",
+    "itempile": "~0.1.1"
   },
-  "peerDependencies": {
-  },
+  "peerDependencies": {},
   "license": "MIT"
 }
