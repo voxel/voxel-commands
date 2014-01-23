@@ -20,6 +20,7 @@ class CommandsPlugin
       help: () ->
         @console.log "Available commands:" # TODO: help usage
         @console.log ".pos x y z"
+        @console.log ".home"
         @console.log ".item name [count [tags]]"
         @console.log ".block name [data]"
         @console.log ".plugins"
@@ -104,7 +105,7 @@ class CommandsPlugin
         @console.log "Set (#{x}, #{y}, #{z}) #{oldName}/#{oldIndex} -> #{name}/#{index}  #{dataInfo}"
 
     # aliases
-    @handlers.p = @handlers.position = @handlers.pos
+    @handlers.p = @handlers.position = @handlers.tp = @handlers.pos
     @handlers.i = @handlers.give = @handlers.item
     @handlers.b = @handlers.setblock = @handlers.set = @handlers.block
 

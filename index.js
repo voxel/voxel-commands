@@ -36,6 +36,7 @@
         help: function() {
           this.console.log("Available commands:");
           this.console.log(".pos x y z");
+          this.console.log(".home");
           this.console.log(".item name [count [tags]]");
           this.console.log(".block name [data]");
           this.console.log(".plugins");
@@ -144,7 +145,7 @@
           return this.console.log("Set (" + x + ", " + y + ", " + z + ") " + oldName + "/" + oldIndex + " -> " + name + "/" + index + "  " + dataInfo);
         }
       };
-      this.handlers.p = this.handlers.position = this.handlers.pos;
+      this.handlers.p = this.handlers.position = this.handlers.tp = this.handlers.pos;
       this.handlers.i = this.handlers.give = this.handlers.item;
       this.handlers.b = this.handlers.setblock = this.handlers.set = this.handlers.block;
       this.enable();
