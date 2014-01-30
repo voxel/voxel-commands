@@ -6,7 +6,7 @@ module.exports = (game, opts) -> new CommandsPlugin game, opts
 module.exports.pluginInfo =
   loadAfter: ['voxel-console']
 
-class CommandsPlugin 
+class CommandsPlugin
   constructor: (@game, opts) ->
     @console = @game.plugins?.get 'voxel-console'
     throw 'voxel-commands requires voxel-console' if not @console?
@@ -133,7 +133,7 @@ class CommandsPlugin
 
 
   enable: () ->
-    @console.widget.on 'input', @onInput = (input) =>
+    @console.widget?.on 'input', @onInput = (input) =>
       @process input
 
   disable: () ->

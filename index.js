@@ -170,11 +170,12 @@
     };
 
     CommandsPlugin.prototype.enable = function() {
-      return this.console.widget.on('input', this.onInput = (function(_this) {
+      var _ref;
+      return (_ref = this.console.widget) != null ? _ref.on('input', this.onInput = (function(_this) {
         return function(input) {
           return _this.process(input);
         };
-      })(this));
+      })(this)) : void 0;
     };
 
     CommandsPlugin.prototype.disable = function() {
