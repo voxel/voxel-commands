@@ -114,7 +114,11 @@ class CommandsPlugin
   process: (input) ->
     if input.indexOf('.') != 0  # regular text # TODO: send to server?
       @console.log input
-      @console.log 'Type .help for commands'
+      connection = @game.plugins?.get('voxel-client')?.connection
+      if connection?
+        connection.emit 'chat', {message:input}
+      else
+        @console.log 'Not connected to server. Type .help for commands'
       return
 
     input = input.substring(1)
@@ -136,6 +140,10 @@ class CommandsPlugin
     @console.widget?.on 'input', @onInput = (input) =>
       @process input
 
+    @game.plugins?.get('voxel-client')?.connection.on 'chat', @onChat = (input) => # TODO: refresh if connection changes?
+      @console.log input.message ? input
+
   disable: () ->
     @console.widget.removeListener 'input', @onInput
+    @game.plugins?.get('voxel-client')?.connection.removeListener 'chat', @onChat
 

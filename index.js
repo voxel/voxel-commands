@@ -152,10 +152,17 @@
     }
 
     CommandsPlugin.prototype.process = function(input) {
-      var args, command, handler, words;
+      var args, command, connection, handler, words, _ref, _ref1;
       if (input.indexOf('.') !== 0) {
         this.console.log(input);
-        this.console.log('Type .help for commands');
+        connection = (_ref = this.game.plugins) != null ? (_ref1 = _ref.get('voxel-client')) != null ? _ref1.connection : void 0 : void 0;
+        if (connection != null) {
+          connection.emit('chat', {
+            message: input
+          });
+        } else {
+          this.console.log('Not connected to server. Type .help for commands');
+        }
         return;
       }
       input = input.substring(1);
@@ -170,16 +177,26 @@
     };
 
     CommandsPlugin.prototype.enable = function() {
-      var _ref;
-      return (_ref = this.console.widget) != null ? _ref.on('input', this.onInput = (function(_this) {
+      var _ref, _ref1, _ref2;
+      if ((_ref = this.console.widget) != null) {
+        _ref.on('input', this.onInput = (function(_this) {
+          return function(input) {
+            return _this.process(input);
+          };
+        })(this));
+      }
+      return (_ref1 = this.game.plugins) != null ? (_ref2 = _ref1.get('voxel-client')) != null ? _ref2.connection.on('chat', this.onChat = (function(_this) {
         return function(input) {
-          return _this.process(input);
+          var _ref3;
+          return _this.console.log((_ref3 = input.message) != null ? _ref3 : input);
         };
-      })(this)) : void 0;
+      })(this)) : void 0 : void 0;
     };
 
     CommandsPlugin.prototype.disable = function() {
-      return this.console.widget.removeListener('input', this.onInput);
+      var _ref, _ref1;
+      this.console.widget.removeListener('input', this.onInput);
+      return (_ref = this.game.plugins) != null ? (_ref1 = _ref.get('voxel-client')) != null ? _ref1.connection.removeListener('chat', this.onChat) : void 0 : void 0;
     };
 
     return CommandsPlugin;
