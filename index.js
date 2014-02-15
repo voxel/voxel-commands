@@ -21,11 +21,11 @@
       this.game = game;
       this.console = (_ref = this.game.plugins) != null ? _ref.get('voxel-console') : void 0;
       if (this.console == null) {
-        throw 'voxel-commands requires voxel-console';
+        throw new Error('voxel-commands requires voxel-console');
       }
       this.registry = (_ref1 = this.game.plugins) != null ? _ref1.get('voxel-registry') : void 0;
       if (this.registry == null) {
-        throw 'voxel-commands requires voxel-registry';
+        throw new Error('voxel-commands requires voxel-registry');
       }
       this.handlers = {
         undefined: function() {

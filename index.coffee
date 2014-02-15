@@ -9,9 +9,9 @@ module.exports.pluginInfo =
 class CommandsPlugin
   constructor: (@game, opts) ->
     @console = @game.plugins?.get 'voxel-console'
-    throw 'voxel-commands requires voxel-console' if not @console?
+    throw new Error('voxel-commands requires voxel-console') if not @console?
     @registry = @game.plugins?.get 'voxel-registry'
-    throw 'voxel-commands requires voxel-registry' if not @registry?
+    throw new Error('voxel-commands requires voxel-registry') if not @registry?
 
     @handlers =
       undefined: (command, args...) ->
