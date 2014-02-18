@@ -26,6 +26,10 @@ class CommandsPlugin
         @console.log ".plugins"
         @console.log ".enable plugin"
         @console.log ".disable plugin"
+        # TODO: move into respective plugins?
+        @console.log ".heal" if @game.plugins.isEnabled('voxel-health')
+        @console.log ".url address" if @game.plugins.isEnabled('voxel-webview')
+        @console.log ".web" if @game.plugins.isEnabled('voxel-webview')
 
       plugins: () ->
         list = @game.plugins?.list() # TODO: listAll? show disabled in red
@@ -60,6 +64,8 @@ class CommandsPlugin
           return
 
         count ?= 1
+        count = parseInt(count, 10)
+        count = 1 if isNaN(count)
         tags ?= undefined
         pile = new ItemPile(name, count, tags)
         carry = @game.plugins?.get 'voxel-carry'
@@ -103,6 +109,18 @@ class CommandsPlugin
         index ?= oldIndex
 
         @console.log "Set (#{x}, #{y}, #{z}) #{oldName}/#{oldIndex} -> #{name}/#{index}  #{dataInfo}"
+
+      heal: () ->
+        @game.plugins.get('voxel-health').heal 999 # TODO: max health
+
+      url: (address) ->
+        if @game.plugins.get('voxel-webview') #  TODO: set url through plugin, .url setter?
+          document.getElementById('voxel-webview').src = address
+
+      web: () ->
+        if @game.plugins.get('voxel-webview')
+          z = document.getElementById('voxel-webview').parentElement.parentElement.style.zIndex
+          document.getElementById('voxel-webview').parentElement.parentElement.style.zIndex = {'-1':0, 0:-1}[z]
 
     # aliases
     @handlers.p = @handlers.position = @handlers.tp = @handlers.pos
