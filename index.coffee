@@ -26,7 +26,7 @@ class CommandsPlugin
         @console.log ".plugins"
         @console.log ".enable plugin"
         @console.log ".disable plugin"
-        # TODO: move into respective plugins?
+        # TODO: move into respective plugins, and use registerCommand()
         @console.log ".heal" if @game.plugins.isEnabled('voxel-health')
         @console.log ".url address" if @game.plugins.isEnabled('voxel-webview')
         @console.log ".web" if @game.plugins.isEnabled('voxel-webview')
@@ -165,3 +165,8 @@ class CommandsPlugin
     @console.widget.removeListener 'input', @onInput
     @game.plugins?.get('voxel-client')?.connection.removeListener 'chat', @onChat
 
+  registerCommand: (name, handler) ->
+    if name in @handlers
+      throw new Error("voxel-commands duplicate command registration: #{name} for #{handler}")
+
+    @handlers[name] = handler
