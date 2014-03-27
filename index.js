@@ -236,6 +236,14 @@
       return this.usages[name] = "" + usage + " -- " + help;
     };
 
+    CommandsPlugin.prototype.unregisterCommand = function(name, handler) {
+      if (this.handlers[name] !== handler) {
+        throw new Error("voxel-commands attempted to unregister mismatched command: " + name + " was " + this.handlers[name] + " not " + handler);
+      }
+      delete this.handlers[name];
+      return delete this.usages[name];
+    };
+
     return CommandsPlugin;
 
   })();

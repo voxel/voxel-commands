@@ -173,3 +173,11 @@ class CommandsPlugin
 
     @handlers[name] = handler
     @usages[name] = "#{usage} -- #{help}"
+
+  unregisterCommand: (name, handler) ->
+    if @handlers[name] != handler
+      throw new Error("voxel-commands attempted to unregister mismatched command: #{name} was #{@handlers[name]} not #{handler}") # TODO: is this a good idea? like removeListener..
+
+    delete @handlers[name]
+    delete @usages[name]
+
