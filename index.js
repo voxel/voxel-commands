@@ -157,21 +157,6 @@
             index = oldIndex;
           }
           return this.console.log("Set (" + x + ", " + y + ", " + z + ") " + oldName + "/" + oldIndex + " -> " + name + "/" + index + "  " + dataInfo);
-        },
-        url: function(address) {
-          if (this.game.plugins.get('voxel-webview')) {
-            return document.getElementById('voxel-webview').src = address;
-          }
-        },
-        web: function() {
-          var z;
-          if (this.game.plugins.get('voxel-webview')) {
-            z = document.getElementById('voxel-webview').parentElement.parentElement.style.zIndex;
-            return document.getElementById('voxel-webview').parentElement.parentElement.style.zIndex = {
-              '-1': 0,
-              0: -1
-            }[z];
-          }
         }
       };
       this.handlers.p = this.handlers.position = this.handlers.tp = this.handlers.pos;

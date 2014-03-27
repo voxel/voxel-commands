@@ -21,9 +21,6 @@ class CommandsPlugin
       plugins: ""
       enable: "plugin"
       disable: "plugin"
-      # TODO: move into respective plugins, and use registerCommand()
-      #url: "address" if @game.plugins.isEnabled('voxel-webview')
-      #web: "" if @game.plugins.isEnabled('voxel-webview')
 
     @handlers =
       undefined: (command, args...) ->
@@ -114,15 +111,6 @@ class CommandsPlugin
         index ?= oldIndex
 
         @console.log "Set (#{x}, #{y}, #{z}) #{oldName}/#{oldIndex} -> #{name}/#{index}  #{dataInfo}"
-
-      url: (address) ->
-        if @game.plugins.get('voxel-webview') #  TODO: set url through plugin, .url setter?
-          document.getElementById('voxel-webview').src = address
-
-      web: () ->
-        if @game.plugins.get('voxel-webview')
-          z = document.getElementById('voxel-webview').parentElement.parentElement.style.zIndex
-          document.getElementById('voxel-webview').parentElement.parentElement.style.zIndex = {'-1':0, 0:-1}[z]
 
     # aliases
     @handlers.p = @handlers.position = @handlers.tp = @handlers.pos
