@@ -22,7 +22,6 @@ class CommandsPlugin
       enable: "plugin"
       disable: "plugin"
       # TODO: move into respective plugins, and use registerCommand()
-      #heal: "" if @game.plugins.isEnabled('voxel-health')
       #url: "address" if @game.plugins.isEnabled('voxel-webview')
       #web: "" if @game.plugins.isEnabled('voxel-webview')
 
@@ -115,9 +114,6 @@ class CommandsPlugin
         index ?= oldIndex
 
         @console.log "Set (#{x}, #{y}, #{z}) #{oldName}/#{oldIndex} -> #{name}/#{index}  #{dataInfo}"
-
-      heal: () ->
-        @game.plugins.get('voxel-health').heal 999 # TODO: max health
 
       url: (address) ->
         if @game.plugins.get('voxel-webview') #  TODO: set url through plugin, .url setter?

@@ -158,9 +158,6 @@
           }
           return this.console.log("Set (" + x + ", " + y + ", " + z + ") " + oldName + "/" + oldIndex + " -> " + name + "/" + index + "  " + dataInfo);
         },
-        heal: function() {
-          return this.game.plugins.get('voxel-health').heal(999);
-        },
         url: function(address) {
           if (this.game.plugins.get('voxel-webview')) {
             return document.getElementById('voxel-webview').src = address;
