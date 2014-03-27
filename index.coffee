@@ -13,23 +13,29 @@ class CommandsPlugin
     @registry = @game.plugins?.get 'voxel-registry'
     throw new Error('voxel-commands requires voxel-registry') if not @registry?
 
+    @usages =
+      pos: "x y z"
+      home: ""
+      item: "name [count [tags]]"
+      block: "name [data]"
+      plugins: ""
+      enable: "plugin"
+      disable: "plugin"
+      # TODO: move into respective plugins, and use registerCommand()
+      #heal: "" if @game.plugins.isEnabled('voxel-health')
+      #url: "address" if @game.plugins.isEnabled('voxel-webview')
+      #web: "" if @game.plugins.isEnabled('voxel-webview')
+
     @handlers =
       undefined: (command, args...) ->
         @console.log "Invalid command #{command} #{args.join ' '}"
 
       help: () ->
-        @console.log "Available commands:" # TODO: help usage
-        @console.log ".pos x y z"
-        @console.log ".home"
-        @console.log ".item name [count [tags]]"
-        @console.log ".block name [data]"
-        @console.log ".plugins"
-        @console.log ".enable plugin"
-        @console.log ".disable plugin"
-        # TODO: move into respective plugins, and use registerCommand()
-        @console.log ".heal" if @game.plugins.isEnabled('voxel-health')
-        @console.log ".url address" if @game.plugins.isEnabled('voxel-webview')
-        @console.log ".web" if @game.plugins.isEnabled('voxel-webview')
+        @console.log "Available commands:"
+        #for name of @handlers # TODO: include all commands, but this extraneously includes aliases, too
+        for name of @usages # only documented commands
+          usage = @usages[name] ? ''
+          @console.log ".#{name} #{usage}"
 
       plugins: () ->
         list = @game.plugins?.list() # TODO: listAll? show disabled in red
@@ -165,8 +171,9 @@ class CommandsPlugin
     @console.widget.removeListener 'input', @onInput
     @game.plugins?.get('voxel-client')?.connection.removeListener 'chat', @onChat
 
-  registerCommand: (name, handler) ->
+  registerCommand: (name, handler, usage, help) ->
     if name in @handlers
       throw new Error("voxel-commands duplicate command registration: #{name} for #{handler}")
 
     @handlers[name] = handler
+    @usages[name] = "#{usage} -- #{help}"

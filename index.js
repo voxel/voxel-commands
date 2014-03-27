@@ -28,6 +28,15 @@
       if (this.registry == null) {
         throw new Error('voxel-commands requires voxel-registry');
       }
+      this.usages = {
+        pos: "x y z",
+        home: "",
+        item: "name [count [tags]]",
+        block: "name [data]",
+        plugins: "",
+        enable: "plugin",
+        disable: "plugin"
+      };
       this.handlers = {
         undefined: function() {
           var args, command;
@@ -35,23 +44,14 @@
           return this.console.log("Invalid command " + command + " " + (args.join(' ')));
         },
         help: function() {
+          var name, usage, _ref2, _results;
           this.console.log("Available commands:");
-          this.console.log(".pos x y z");
-          this.console.log(".home");
-          this.console.log(".item name [count [tags]]");
-          this.console.log(".block name [data]");
-          this.console.log(".plugins");
-          this.console.log(".enable plugin");
-          this.console.log(".disable plugin");
-          if (this.game.plugins.isEnabled('voxel-health')) {
-            this.console.log(".heal");
+          _results = [];
+          for (name in this.usages) {
+            usage = (_ref2 = this.usages[name]) != null ? _ref2 : '';
+            _results.push(this.console.log("." + name + " " + usage));
           }
-          if (this.game.plugins.isEnabled('voxel-webview')) {
-            this.console.log(".url address");
-          }
-          if (this.game.plugins.isEnabled('voxel-webview')) {
-            return this.console.log(".web");
-          }
+          return _results;
         },
         plugins: function() {
           var list, _ref2;
@@ -231,11 +231,12 @@
       return (_ref = this.game.plugins) != null ? (_ref1 = _ref.get('voxel-client')) != null ? _ref1.connection.removeListener('chat', this.onChat) : void 0 : void 0;
     };
 
-    CommandsPlugin.prototype.registerCommand = function(name, handler) {
+    CommandsPlugin.prototype.registerCommand = function(name, handler, usage, help) {
       if (__indexOf.call(this.handlers, name) >= 0) {
         throw new Error("voxel-commands duplicate command registration: " + name + " for " + handler);
       }
-      return this.handlers[name] = handler;
+      this.handlers[name] = handler;
+      return this.usages[name] = "" + usage + " -- " + help;
     };
 
     return CommandsPlugin;
