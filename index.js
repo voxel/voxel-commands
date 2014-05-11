@@ -85,12 +85,23 @@
           var _ref2, _ref3;
           return (_ref2 = this.game.plugins) != null ? (_ref3 = _ref2.get('voxel-player')) != null ? _ref3.home() : void 0 : void 0;
         },
-        item: function(name, count, tags) {
-          var carry, pile, props, _ref2;
+        item: function(name, count, tagsStr) {
+          var carry, e, pile, props, tags, _ref2;
           props = this.registry.getItemProps(name);
           if (props == null) {
             this.console.log("No such item: " + name);
             return;
+          }
+          if (tagsStr != null) {
+            try {
+              tags = JSON.parse(tagsStr);
+            } catch (_error) {
+              e = _error;
+              this.console.log("Invalid JSON " + tagsStr + ": " + e);
+              return;
+            }
+          } else {
+            tags = void 0;
           }
           if (count == null) {
             count = 1;
@@ -99,17 +110,11 @@
           if (isNaN(count)) {
             count = 1;
           }
-          if (tags == null) {
-            tags = void 0;
-          }
           pile = new ItemPile(name, count, tags);
           carry = (_ref2 = this.game.plugins) != null ? _ref2.get('voxel-carry') : void 0;
           if (carry) {
             carry.inventory.give(pile);
-            if (tags == null) {
-              tags = '';
-            }
-            return this.console.log("Gave " + name + " x " + count + " " + tags);
+            return this.console.log("Gave " + name + " x " + count + " " + (tags != null ? JSON.stringify(tags) : ''));
           }
         },
         block: function(name, data) {

@@ -58,23 +58,30 @@ class CommandsPlugin
       home: () ->
         @game.plugins?.get('voxel-player')?.home()
 
-      item: (name, count, tags) ->
+      item: (name, count, tagsStr) ->
 
         props = @registry.getItemProps name
         if not props?
           @console.log "No such item: #{name}"
           return
 
+        if tagsStr?
+          try
+            tags = JSON.parse tagsStr
+          catch e
+            @console.log "Invalid JSON #{tagsStr}: #{e}"
+            return
+        else
+          tags = undefined
+
         count ?= 1
         count = parseInt(count, 10)
         count = 1 if isNaN(count)
-        tags ?= undefined
         pile = new ItemPile(name, count, tags)
         carry = @game.plugins?.get 'voxel-carry'
         if carry
           carry.inventory.give pile
-          tags ?= '' # hide no tags for display
-          @console.log "Gave #{name} x #{count} #{tags}"
+          @console.log "Gave #{name} x #{count} #{if tags? then JSON.stringify(tags) else ''}"
         # TODO: integrate with voxel-inventory-hotbar, move to current slot?
 
       block: (name, data) ->
