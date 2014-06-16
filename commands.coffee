@@ -17,6 +17,7 @@ class CommandsPlugin
       pos: "x y z"
       home: ""
       item: "name [count [tags]]"
+      clear: ""
       block: "name [data]"
       plugins: ""
       enable: "plugin"
@@ -83,6 +84,12 @@ class CommandsPlugin
           carry.inventory.give pile
           @console.log "Gave #{name} x #{count} #{if tags? then JSON.stringify(tags) else ''}"
         # TODO: integrate with voxel-inventory-hotbar, move to current slot?
+
+      clear: () -> # TODO: optionally list item types to clear only those
+        carry = @game.plugins?.get 'voxel-carry'
+        if carry
+          carry.inventory.clear()
+          @console.log "Cleared inventory"
 
       block: (name, data) ->
         if name?
