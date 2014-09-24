@@ -1,7 +1,7 @@
 {
   "name": "voxel-commands",
   "description": "a few basic commands for voxel-console (voxel.js plugin)",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "main": "commands.coffee",
   "repository": {
     "type": "git",
@@ -18,7 +18,9 @@
     "itempile": "^0.2.1"
   },
   "browserify": {
-    "transform": [ "coffeeify" ]
+    "transform": [
+      "coffeeify"
+    ]
   },
   "license": "MIT"
 }
