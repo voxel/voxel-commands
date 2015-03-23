@@ -11,6 +11,16 @@ A few basic commands for [voxel-console](https://github.com/deathcap/voxel-conso
 * .enable plugin - enable a plugin
 * .disable plugin - disable a plugin
 
+## API
+
+    var commands = game.plugins.get('voxel-commands')
+
+    // other plugins can register their own custom commands
+    commands.registerCommand(name, handler, usage, help);
+    commands.unregisterCommand(name, handler);
+
+    commands.isConnectedToServer = true; // suppress 'Not connected to server' chat messages
+
 ## License
 
 MIT

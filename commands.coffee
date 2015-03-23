@@ -13,6 +13,9 @@ class CommandsPlugin
     @registry = @game.plugins?.get 'voxel-registry'
     throw new Error('voxel-commands requires voxel-registry') if not @registry?
 
+    # can be set to suppress 'Not connected to server' chat messages
+    @isConnectedToServer = false
+
     @usages =
       pos: "x y z"
       home: ""
@@ -134,14 +137,15 @@ class CommandsPlugin
     @enable()
 
   process: (input) ->
-    if input.indexOf('.') != 0  # regular text # TODO: send to server?
-      @console.log input
-      connection = @game.plugins?.get('voxel-client')?.connection
-      if connection?
-        connection.emit 'chat', {message:input}
-      else
-        @console.log 'Not connected to server. Type .help for commands'
-      return
+    if input.indexOf('.') != 0 # regular text
+      if not @isConnectedToServer # (or send to server)
+        @console.log input
+        connection = @game.plugins?.get('voxel-client')?.connection
+        if connection?
+          connection.emit 'chat', {message:input}
+        else
+          @console.log 'Not connected to server. Type .help for commands'
+      return # no local echo
 
     input = input.substring(1)
 
