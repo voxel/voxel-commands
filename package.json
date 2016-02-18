@@ -13,9 +13,9 @@
     "commands"
   ],
   "dependencies": {
-    "coffeeify": "^1.0.0",
-    "inventory": "^1.0.0",
-    "itempile": "^1.0.1",
+    "coffeeify": "^2.0.1",
+    "inventory": "^2.0.0",
+    "itempile": "^2.0.0",
     "shellwords": "^0.1.0"
   },
   "browserify": {
