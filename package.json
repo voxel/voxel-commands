@@ -13,15 +13,9 @@
     "commands"
   ],
   "dependencies": {
-    "coffeeify": "^1.0.0",
     "inventory": "^2.0.0",
     "itempile": "^2.0.0",
     "shellwords": "^0.1.0"
-  },
-  "browserify": {
-    "transform": [
-      "coffeeify"
-    ]
   },
   "license": "MIT"
 }
