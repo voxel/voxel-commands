@@ -2,7 +2,7 @@
   "name": "voxel-commands",
   "description": "a few basic commands for voxel-console (voxel.js plugin)",
   "version": "0.4.0",
-  "main": "commands.coffee",
+  "main": "commands.js",
   "repository": {
     "type": "git",
     "url": "git@github.com:deathcap/voxel-commands.git"
