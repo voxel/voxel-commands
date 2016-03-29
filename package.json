@@ -2,7 +2,7 @@
   "name": "voxel-commands",
   "description": "a few basic commands for voxel-console (voxel.js plugin)",
   "version": "0.4.0",
-  "main": "commands.coffee",
+  "main": "commands.js",
   "repository": {
     "type": "git",
     "url": "git@github.com:deathcap/voxel-commands.git"
@@ -13,15 +13,9 @@
     "commands"
   ],
   "dependencies": {
-    "coffeeify": "^1.0.0",
-    "inventory": "^1.0.0",
-    "itempile": "^1.0.1",
+    "inventory": "^2.0.0",
+    "itempile": "^2.0.0",
     "shellwords": "^0.1.0"
-  },
-  "browserify": {
-    "transform": [
-      "coffeeify"
-    ]
   },
   "license": "MIT"
 }
