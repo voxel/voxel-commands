@@ -31,9 +31,7 @@ class CommandsPlugin {
     };
 
     this.handlers = {
-      //undefined: (command, args...) => { // TODO: spread
-      'undefined': (command) => {
-        const args = arguments.slice(1);
+      undefined: (command, ...args) => {
         this.console.log(`Invalid command ${command} ${args.join(' ')}`);
       },
 
