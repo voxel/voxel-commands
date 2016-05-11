@@ -1,7 +1,7 @@
 {
   "name": "voxel-commands",
   "description": "a few basic commands for voxel-console (voxel.js plugin)",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "commands.js",
   "repository": {
     "type": "git",
